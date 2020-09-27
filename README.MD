@@ -7,6 +7,7 @@ This is a wordpress environment that utilizes docker compose to start multiple c
 Make sure you have installed Docker && Docker compose
 
 [Install Docker Engine](https://docs.docker.com/engine/install/ubuntu/)
+
 [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 
@@ -19,7 +20,7 @@ git clone https://github.com/Ianodad/dockercompose.git
 ## Usage
 
 ```bash
-cd compose
+cd dockercompose
 
 docker-compose up --build # Run docker-compose
 ```
@@ -32,7 +33,7 @@ docker-compose up --build -d # detached mode(run in background)
 
 ```bash
 docker-compose stop #Gracefully stop containers
-docker-compose kill # 
+docker-compose kill # Force stop
 docker-compose down # stops containers and removes containers, network, volumes, and images created
 ```
 
