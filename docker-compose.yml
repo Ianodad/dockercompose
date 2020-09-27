@@ -1,0 +1,62 @@
+version: "3.7" # docker compose version 
+
+services:
+
+  # Database container
+  mariadb:
+    image: mariadb 
+    container_name: mariadb # default to lts tag base image 
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql # Location on persisted data
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_USER: wordpress
+    networks: # Network name for all compose containers
+      - source
+  
+  # phpadmin container 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest # base image as latest tag
+    container_name: phpmyadmin
+
+    ports:
+      - 8081:80 # Mapping internal 80 port to External port localhost:8001
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mariadb
+    depends_on:
+      - mariadb # Connect to mariadb as a container 
+    restart: always
+    networks:
+      - source 
+
+# Wordpress container 
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress
+    depends_on:
+      - mariadb
+      - phpmyadmin
+    ports:
+      - '80:80'
+    restart: always
+    volumes: 
+       - wordpress:/var/www/html
+    environment: # Environment Variables another way of defining 
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    networks:
+      - source
+      
+volumes: # define volume
+  wordpress:
+  mariadb:
+
+
+networks: # define network and driver type
+  source:
+    driver: bridge      
