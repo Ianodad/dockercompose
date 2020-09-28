@@ -4,26 +4,26 @@ services:
 
   # Database container
   mariadb:
-    image: mariadb 
+    image: mariadb:${MARIADB_TAG:-latest}
     container_name: mariadb # default to lts tag base image 
     restart: always
     volumes:
       - mariadb:/var/lib/mysql # Location on persisted data
     environment:
-      MYSQL_ROOT_PASSWORD: wordpress
-      MYSQL_DATABASE: wordpress
-      MYSQL_PASSWORD: wordpress
-      MYSQL_USER: wordpress
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_USER: ${DATABASE_USERNAME}
     networks: # Network name for all compose containers
       - source
   
   # phpadmin container 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest # base image as latest tag
+    image: phpmyadmin/phpmyadmin:${PHPMYADMIN_TAG:-latest} # base image as latest tag
     container_name: phpmyadmin
 
     ports:
-      - 8081:80 # Mapping internal 80 port to External port localhost:8001
+      - ${PHPMYADMIN_PORT}:80 # Mapping internal 80 port to External port localhost:8001
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: mariadb
@@ -35,20 +35,20 @@ services:
 
 # Wordpress container 
   wordpress:
-    image: wordpress:latest
+    image: wordpress:${WORDPRESS_TAG:-latest}
     container_name: wordpress
     depends_on:
       - mariadb
       - phpmyadmin
     ports:
-      - '80:80'
+      - '${WORDPRESS_PORT}:80'
     restart: always
     volumes: 
        - wordpress:/var/www/html
     environment: # Environment Variables another way of defining 
       WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USERNAME}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
     networks:
       - source
       
