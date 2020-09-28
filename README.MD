@@ -28,6 +28,10 @@ or
 ```bash
 docker-compose up --build -d # detached mode(run in background) 
 ```
+## View Dashboards
+
+Wordpress: http://localhost:80/
+Phpmyadmin: http://localhost:8081/
 
 ## Other Commands
 
